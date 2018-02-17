@@ -36,7 +36,22 @@ This will complete the installation. From now on you just need to do
 import5eChar::shinySheetAC()
 ```
 
-From RGui to run the app. Note that to quit the app, you need to stop it through RGui (red stop button). See usage instructions [here](https://github.com/oganm/import5eChar/blob/master/interactiveSheetDocumentation.md)
+from RGui to run the app.
+
+### R user
+
+I assume you have everything set up
+
+``` r
+install.packages('devtools')
+devtools::install_github('oganm/import5eChar')
+```
+
+to install and
+
+`r  import5eChar::shinySheetAC()`
+
+to run. Note that this'll shut down your R session after closing the window. If you don't want that to happen use `import5eChar::shinySheet()` instead.
 
 Updating
 --------
