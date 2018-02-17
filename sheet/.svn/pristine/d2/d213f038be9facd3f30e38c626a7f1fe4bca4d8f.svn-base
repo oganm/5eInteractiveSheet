@@ -1,0 +1,57 @@
+.progress{
+    margin-bottom:0;
+}
+
+.checkbox{
+    margin-top:0;
+    margin-bottom:0;
+}
+
+.skillButton{
+    padding-top:4px;
+    padding-bottom:4px
+}
+
+.weaponButton{
+    padding-left:9px;
+    padding-right:9px;}
+
+.attributeButton{
+    padding-top:4px;
+    padding-bottom:4px
+}
+
+.narrowElement{
+    margin-top:0;
+    margin-bottom:0
+}
+
+.field{
+    font-size:17px;
+    min-height:17px;
+}
+
+.minorText{
+    font-size:11px;
+}
+
+.modButton{
+    padding:0px 5px;
+}
+
+.shiny-input-container{
+    margin-bottom:0;
+    margin-top:0;
+}
+
+.progress-bar-danger{
+    background-color:#8B1A1A;
+}
+
+.progress-bar-primary{
+    background-color:#6959CD;
+}
+
+.increment{
+    display:inline-block
+}
