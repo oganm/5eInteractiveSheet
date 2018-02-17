@@ -1,5 +1,6 @@
 library(RInno)
-
+library(dplyr)
+library(magrittr)
 depends = c("googledrive",
             'magrittr',
             'dplyr',
@@ -21,8 +22,10 @@ depends = c("googledrive",
             'DT',
             'shinyBS')
 
+appVersion = '1.0.0'
+
 unlink('sheet',recursive = TRUE)
-unlink('sheetCI',recursive = TRUE)
+unlink('sheetCI',recursive = TRUE,force = TRUE)
 
 system('svn checkout https://github.com/oganm/import5eChar/trunk/inst/app')
 file.rename('app','sheet')
@@ -38,6 +41,11 @@ file.copy('infobefore.txt','sheet/infobefore.txt',overwrite = TRUE)
 appR = readLines('sheet/global.R')
 appR = c('options(ImThePortableClient = TRUE)',appR)
 writeLines(appR,'sheet/global.R')
+
+iss = readLines('sheet/5eInteractiveSheet.iss')
+iss[2] %<>% gsub(pattern = '0.0.0',replacement = appVersion,.)
+writeLines(iss,'sheet/5eInteractiveSheet.iss')
+
 compile_iss()
 
 #######################
@@ -56,8 +64,11 @@ file.copy('infoafter.txt','sheetCI/infoafter.txt',overwrite = TRUE)
 file.copy('infobefore.txt','sheetCI/infobefore.txt',overwrite = TRUE)
 
 appR = readLines('sheetCI/utils/app.R')
-
 appR = c('options(ImThePortableClient = TRUE)',appR)
 writeLines(appR,'sheetCI/utils/app.R')
+
+iss = readLines('sheet/5eInteractiveSheet.iss')
+iss[2] %<>% gsub(pattern = '0.0.0',replacement = appVersion,.)
+writeLines(iss,'sheet/5eInteractiveSheet.iss')
 
 compile_iss()
