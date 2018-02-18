@@ -56,7 +56,7 @@ to run. Note that this'll shut down your R session after closing the window. If 
 Updating
 --------
 
-If you are on windows, download exe and install again. Other's just run
+If you are on windows, uninstall your previous version, download exe and install again. Other's just run
 
 ``` r
 devtools::install_github('oganm/import5eChar')

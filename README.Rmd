@@ -70,7 +70,8 @@ If you don't want that to happen use `import5eChar::shinySheet()` instead.
 
 ## Updating
 
-If you are on windows, download exe and install again. Other's just run
+If you are on windows, uninstall your previous version, download exe and install 
+again. Other's just run
 
 ```r
 devtools::install_github('oganm/import5eChar')
