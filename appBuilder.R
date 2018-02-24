@@ -23,7 +23,8 @@ unlink('sheetCI',recursive = TRUE,force = TRUE)
 system('svn checkout https://github.com/oganm/import5eChar/trunk/inst/app')
 unlink('app/.svn', recursive = TRUE, force = TRUE)
 file.rename('app','sheet')
-git2r::clone('https://github.com/oganm/import5eChar.git',local_path = 'sheetCI')
+dir.create('sheetCI')
+# git2r::clone('https://github.com/oganm/import5eChar.git',local_path = 'sheetCI')
 
 #######################
 create_app(app_name = "5eInteractiveSheet", app_dir = "sheet",include_R = TRUE)
@@ -61,8 +62,8 @@ appR = readLines('sheetCI/utils/app.R')
 appR = c('options(ImThePortableClient = TRUE)',appR)
 writeLines(appR,'sheetCI/utils/app.R')
 
-iss = readLines('sheet/5eInteractiveSheet.iss')
+iss = readLines('sheetCI/import5eChar.iss')
 iss[2] %<>% gsub(pattern = '0.0.0',replacement = appVersion,.)
-writeLines(iss,'sheet/5eInteractiveSheet.iss')
+writeLines(iss,'sheetCI/import5eChar.iss')
 
 compile_iss()
