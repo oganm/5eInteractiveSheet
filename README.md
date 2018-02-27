@@ -7,7 +7,7 @@ Installation
 
 ### Windows
 
-You have it easy. Just download the exe file [here](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe), install and run. Unless you had R (the language this thing is written in) installed, it'll ask you if you want to install it or not. Say yes as it is required. After that you should be golden.
+You have it easy. Just download the exe file [here](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe), install and run. After that you should be golden.
 
 Double click the desktop icon to run. See usage instructions [here](https://github.com/oganm/import5eChar/blob/master/interactiveSheetDocumentation.md)
 
