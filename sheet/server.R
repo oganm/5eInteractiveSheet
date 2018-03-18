@@ -5,7 +5,7 @@ shinyServer(function(input, output,session) {
     # close the R session when Chrome closes
     session$onSessionEnded(function() {
         if(!is.null(getOption('ImThePortableClient')) |
-           !is.null(getOption('AutoClosCharSheet'))){
+           !is.null(getOption('AutoCloseCharSheet'))){
             stopApp()
             q("no")
         }
@@ -17,6 +17,8 @@ shinyServer(function(input, output,session) {
 
     char = do.call(reactiveValues,char)
 
+    callModule(packageVersion,
+               'pVersion')
 
     consoleOut = reactiveVal(rep('\n',consoleLength) %>% paste(collapse = ''))
 

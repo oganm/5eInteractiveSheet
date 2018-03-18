@@ -23,12 +23,14 @@ if(!exists('char')){
 
 helpLink = ''
 
+# options(ImTheWebClient= TRUE)
+
 iconCredits = c('Lorc',
                 'Delapouite',
                 'Carl Olsen',
                 'Skoll')
-if(!exists('spellSource')){
-    spellSource = 'https://www.dndbeyond.com/spells/'
-    # spellSource = 'https://thebombzen.com/grimoire/spells/'
+if(!exists('.sheetApp.spellSource')){
+    .sheetApp.spellSource = 'https://www.dndbeyond.com/spells/'
+    # .sheetApp.spellSource = 'https://thebombzen.com/grimoire/spells/'
 }
 

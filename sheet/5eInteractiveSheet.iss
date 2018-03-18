@@ -11,7 +11,7 @@
 
 [Setup]
 AppName = {#MyAppName}
-AppId = {{1ZUJZLOL-NSEB-EOCC-13PY-8D8MF880JXN9}
+AppId = {{L2R2RFIH-15W2-63S6-CZFZ-TDW5BLL0SAYA}
 DefaultDirName = {userdocs}\{#MyAppName}
 DefaultGroupName = {#MyAppName}
 OutputDir = RInno_installer
@@ -328,6 +328,7 @@ begin
   // Initialize the values of supported versions
   RVersions := TStringList.Create; // Make a new TStringList object reference
   // Add strings to the StringList object
+  RVersions.Add('3.4.4');
   RVersions.Add('3.4.3');
 
 end;

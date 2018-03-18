@@ -20,7 +20,7 @@ characterDescription = function(input,output,session,char,charInitial){
                            column(5,h2(char$Name)),
                            column(4,
                                   {
-                                      if(is.null(getOption('ImThePortableClient'))){
+                                      if(is.null(getOption('ImThePortableClient')) & is.null(getOption('ImTheWebClient'))){
                                           tagList(
                                               div(textInput(session$ns('driveInput'),label = 'G Drive Import',width = '150px') ,style= 'display: inline-block'),
                                               actionButton(session$ns('driveSubmit'),label = '',icon = icon('check'),class = 'modButton',style = 'display: inline-block'),
@@ -529,7 +529,8 @@ resources = function(input,output,session,char){
                                          shortName == 'Resource' &
                                          remainingUse ==0 &
                                          maxUse == 0 &
-                                         dice == 0))
+                                         dice == 0)) %>%
+            filter(shortName != '')
 
         if(nrow(char$resources) == 0){
             return(NULL)
@@ -674,7 +675,7 @@ spells = function(input,output,session,char){
 
 
             nameButtons = char$spells$name %>% sapply(function(x){
-                a(href = paste0(spellSource,
+                a(href = paste0(.sheetApp.spellSource,
                                 x %>% tolower() %>% gsub(' |/','-',.) %>% gsub("'",'',.)),
                   target= '_blank',x
                 ) %>% as.character()
@@ -799,4 +800,19 @@ diceRoller = function(input,output,session){
     })
 
     return(out)
+}
+
+packageVersionUI = function(id){
+    ns = NS(id)
+    tagList(
+        textOutput(outputId = ns('version'))
+    )
+}
+
+packageVersion = function(input,output,session){
+    output$version = renderText({
+        version = installed.packages() %>% as.data.frame %>% filter(Package == 'import5eChar') %$% Version %>% as.character()
+        paste('Version:',version)
+    })
+
 }
