@@ -4,6 +4,10 @@ output: github_document
 
 # Readme
 
+## Online version
+
+Online version can be found [here](https://oganm.github.io/5eInteractiveSheet/). It is less responsive than the installed version as it's running on a potato. It's been fast enough for me so far but running a local version boosts performance significantly.
+
 ## Installation
 
 ### Windows
