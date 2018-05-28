@@ -9,7 +9,7 @@ Installation
 
 Download and install either [this](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe) file (static version) or [this](https://github.com/oganm/5eInteractiveSheet/raw/master/sheetCI/RInno_installer/setup_import5eChar.exe) one (automatically gets the latest version)
 
-You have it easy. If you want a static version download the exe file [here](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe), install and run. If you want a version that updates itself automatically as I change stuff, download Unless you had R (the language this thing is written in) installed, it'll ask you if you want to install it or not. Say yes as it is required. After that you should be golden.
+After that you should be golden.
 
 Double click the desktop icon to run. See usage instructions [here](https://github.com/oganm/import5eChar/blob/master/interactiveSheetDocumentation.md)
 
