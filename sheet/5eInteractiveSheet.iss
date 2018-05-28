@@ -11,7 +11,7 @@
 
 [Setup]
 AppName = {#MyAppName}
-AppId = {{L2R2RFIH-15W2-63S6-CZFZ-TDW5BLL0SAYA}
+AppId = {{ZY5P0XDC-YF04-IL9C-15BW-NRYU7ZFI31UC}
 DefaultDirName = {userdocs}\{#MyAppName}
 DefaultGroupName = {#MyAppName}
 OutputDir = RInno_installer
@@ -61,7 +61,8 @@ Source: "modules.R"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "server.R"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "setup.ico"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "ui.R"; DestDir: "{app}"; Flags: ignoreversion;
-          Source: "utils/app.R"; DestDir: "{app}\utils"; Flags: ignoreversion;
+          Source: "modules/healthModule.R"; DestDir: "{app}\modules"; Flags: ignoreversion;
+Source: "utils/app.R"; DestDir: "{app}\utils"; Flags: ignoreversion;
 Source: "utils/config.cfg"; DestDir: "{app}\utils"; Flags: ignoreversion;
 Source: "utils/ensure.R"; DestDir: "{app}\utils"; Flags: ignoreversion;
 Source: "utils/get_app_from_app_url.R"; DestDir: "{app}\utils"; Flags: ignoreversion;
@@ -91,6 +92,9 @@ Source: "www/icons/thrown-spear.png"; DestDir: "{app}\www\icons"; Flags: ignorev
 Source: "www/icons/trident.png"; DestDir: "{app}\www\icons"; Flags: ignoreversion;
 Source: "www/icons/whip.png"; DestDir: "{app}\www\icons"; Flags: ignoreversion;
 Source: "www/icons/wood-club.png"; DestDir: "{app}\www\icons"; Flags: ignoreversion;
+Source: "www/js/jqfp.js"; DestDir: "{app}\www\js"; Flags: ignoreversion;
+Source: "www/js/md5.js"; DestDir: "{app}\www\js"; Flags: ignoreversion;
+Source: "www/js/shinyBindings.js"; DestDir: "{app}\www\js"; Flags: ignoreversion;
 Source: "www/style.css"; DestDir: "{app}\www"; Flags: ignoreversion;
 
   [Run]
@@ -328,6 +332,7 @@ begin
   // Initialize the values of supported versions
   RVersions := TStringList.Create; // Make a new TStringList object reference
   // Add strings to the StringList object
+  RVersions.Add('3.5.0');
   RVersions.Add('3.4.4');
   RVersions.Add('3.4.3');
 

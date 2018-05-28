@@ -4,6 +4,36 @@ characterDescriptionUI = function(id){
 }
 
 characterDescription = function(input,output,session,char,charInitial){
+
+    inputUserid <- function(inputId, value='') {
+        #   print(paste(inputId, "=", value))
+        tagList(
+            singleton(tags$head(tags$script(src = "js/md5.js", type='text/javascript'))),
+            singleton(tags$head(tags$script(src = "js/shinyBindings.js", type='text/javascript'))),
+            tags$body(onload="setvalues()"),
+            tags$input(id = inputId, class = "userid", value=as.character(value), type="text", style="display:none;")
+        )
+    }
+
+    inputIp <- function(inputId, value='', ns){
+        tagList(
+            singleton(tags$head(tags$script(src = "js/md5.js", type='text/javascript'))),
+            singleton(tags$head(tags$script(src = "js/shinyBindings.js", type='text/javascript'))),
+            tags$body(onload="setvalues()"),
+            tags$input(id = inputId, class = "ipaddr", value=as.character(value), type="text", style="display:none;")
+        )
+    }
+    saveCharacter = function(characterFile, consent, fingerprint = ''){
+        randomName = tools::md5sum(characterFile)
+        if(consent){
+            dir.create('chars',showWarnings = FALSE)
+            file.copy(characterFile, file.path('chars',paste0(fingerprint,'_',randomName)))
+        } else {
+            dir.create('naysayer',showWarnings = FALSE)
+            file.create(file.path('naysayer',paste0(fingerprint,'_',randomName)))
+        }
+    }
+
     output$description = renderUI({
         descriptiveElement = function(field,label){
             tagList(
@@ -15,6 +45,15 @@ characterDescription = function(input,output,session,char,charInitial){
 
         tagList(
             fluidRow(
+                {
+                    if(!is.null(getOption('ImTheWebClient'))){
+                        tagList(inputIp(session$ns("ipid")),
+                                inputUserid(session$ns("fingerprint")))
+                    } else  {
+                        NULL
+                    }
+                },
+
                 column(5,
                        wellPanel(fluidRow(
                            column(5,h2(char$Name)),
@@ -33,7 +72,10 @@ characterDescription = function(input,output,session,char,charInitial){
                                   ),
                            column(3,
                                   fileInput(session$ns('charInput'),label = 'Local import'),
-                                  bsTooltip(session$ns('charInput'),'Load local file',placement = 'bottom'))
+                                  div(id=session$ns('consentDiv') , checkboxInput(inputId = session$ns('consent'),label = 'Can I keep a copy?', value = TRUE), style = 'font-size:70%'),
+                                  bsTooltip(session$ns('charInput'),'Load local file',placement = 'bottom'),
+                                  bsTooltip(session$ns('consentDiv'),
+                                            title = "If the box is checked I save a copy of the uploaded character sheet. I use these saved sheets as test cases when improving the application. I also plan to use them for some statistical analyses examining character building choices. The characters remain your intellectual property. If you\\'d rather I didn\\'t save your character, uncheck this box. I won\\'t be mad. Only dissapointed"))
                        )
                        )
                 ),
@@ -41,7 +83,11 @@ characterDescription = function(input,output,session,char,charInitial){
                        wellPanel(
                            fluidRow(
                                column(2, descriptiveElement(AC(char),'AC')),
-                               column(2, descriptiveElement(initBonus(char),'Initiative')),
+                               column(2,
+                                      actionButton(session$ns('init'), label = initBonus(char), class = 'skillButton'),
+                                      hr(class = 'narrowElement'),
+                                      p('Initiative', class = 'narrowElement minorText')
+                                      ),
                                column(4, descriptiveElement(char$ClassField,'Class & Level')),
                                column(4, descriptiveElement(char$Background,'Background'))
 
@@ -59,6 +105,14 @@ characterDescription = function(input,output,session,char,charInitial){
 
     observe({
         input$charInput
+        if(is.null(getOption('ImTheWebClient'))){
+            hide('consentDiv')
+
+        }
+    })
+
+    observe({
+        input$charInput
         if(!is.null(input$charInput)){
             character = importCharacter(file = input$charInput$datapath)
             isolate({
@@ -67,6 +121,9 @@ characterDescription = function(input,output,session,char,charInitial){
                 }
                 for(x in names(reactiveValuesToList(charInitial))){
                     charInitial[[x]] = character[[x]]
+                }
+                if(!is.null(getOption('ImTheWebClient'))){
+                    saveCharacter(input$charInput$datapath, input$consent, paste0(input$fingerprint,'_',input$ipid))
                 }
 
             })
@@ -91,6 +148,22 @@ characterDescription = function(input,output,session,char,charInitial){
         }
         })
     })
+
+    out = reactive({
+        out = ''
+        if(!is.null(input$init) && input$init > 0){
+            out = paste0('Initiative:\n',
+                         capture.output(init(char)) %>%
+                             gsub('(\\[1\\] )|"','',.) %>%
+                             paste(collapse = '\n'))
+            session$sendCustomMessage(type = 'resetInputValue',
+                                      message =  session$ns('init'))
+
+        }
+        return(out)
+    })
+
+    return(out)
 
 }
 
@@ -486,7 +559,8 @@ skills = function(input, output,session,char){
                                          bLengthChange = 0,
                                          paging = 0,
                                          ordering = 0,
-                                         bInfo = 0))
+                                         bInfo = 0,
+                                         pageLength = nrow(charAts)))
         return(table)
 
     })
@@ -581,7 +655,8 @@ resources = function(input,output,session,char){
                                          bLengthChange = 0,
                                          paging = 0,
                                          ordering = 0,
-                                         bInfo = 0))
+                                         bInfo = 0,
+                                         pageLength = nrow(resourceTable)))
 
     })
 
