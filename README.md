@@ -63,7 +63,7 @@ to run. Note that this'll shut down your R session after closing the window. If 
 Updating
 --------
 
-If you used the installer uninstall your previous version, download exe and install.
+If you used the installer uninstall your previous version, download exe and install. If you see something is wrong after an update, some packages might be out of date and the installer didn't bother do update them. To fix this, you can either open R console and run `devtools::install_github('oganm/import5eChar')`, or before re-installing, delete your R packages folder as well.
 
 Other's just run
 
