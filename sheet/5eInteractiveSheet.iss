@@ -1,4 +1,4 @@
-            #define MyAppName "5eInteractiveSheet"
+  #define MyAppName "5eInteractiveSheet"
 #define MyAppVersion "1.0.0"
 #define MyAppExeName "5eInteractiveSheet.bat"
 #define RVersion "3.4.3"
@@ -6,12 +6,14 @@
 #define PandocVersion "1.17.2"
 #define IncludePandoc false
 #define IncludeChrome false
+#define RtoolsVersion "35"
+#define IncludeRtools false
 #define MyAppPublisher ""
 #define MyAppURL ""
 
 [Setup]
 AppName = {#MyAppName}
-AppId = {{ZY5P0XDC-YF04-IL9C-15BW-NRYU7ZFI31UC}
+AppId = {{PA62LT0R-MWV7-1P8M-4RTY-SEMNBNSDKVMQ}
 DefaultDirName = {userdocs}\{#MyAppName}
 DefaultGroupName = {#MyAppName}
 OutputDir = RInno_installer
@@ -41,19 +43,22 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
 Name: "{commonprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\default.ico"
 Name: "{commondesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon; IconFilename: "{app}\default.ico"
 
-          [Files]
-          Source: "LICENSE"; Flags: dontcopy
-          Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-          #if IncludeR
-              Source: "R-{#RVersion}-win.exe"; DestDir: "{tmp}"; Check: RNeeded
-          #endif
-          #if IncludePandoc
-              Source: "pandoc-{#PandocVersion}-windows.msi"; DestDir: "{tmp}"; Check: PandocNeeded
-          #endif
-          #if IncludeChrome
-              Source: "chrome_installer.exe"; DestDir: "{tmp}"; Check: ChromeNeeded
-          #endif
-          Source: "5eInteractiveSheet.bat"; DestDir: "{app}"; Flags: ignoreversion;
+[Files]
+Source: "LICENSE"; Flags: dontcopy noencryption
+Source: "{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+#if IncludeR
+    Source: "R-{#RVersion}-win.exe"; DestDir: "{tmp}"; Check: RNeeded
+#endif
+#if IncludePandoc
+    Source: "pandoc-{#PandocVersion}-windows.msi"; DestDir: "{tmp}"; Check: PandocNeeded
+#endif
+#if IncludeChrome
+    Source: "chrome_installer.exe"; DestDir: "{tmp}"; Check: ChromeNeeded
+#endif
+#if IncludeRtools
+    Source: "Rtools{#RtoolsVersion}.exe"; DestDir: "{tmp}";
+#endif
+Source: "5eInteractiveSheet.bat"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "default.ico"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "global.R"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "LICENSE"; DestDir: "{app}"; Flags: ignoreversion;
@@ -61,7 +66,10 @@ Source: "modules.R"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "server.R"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "setup.ico"; DestDir: "{app}"; Flags: ignoreversion;
 Source: "ui.R"; DestDir: "{app}"; Flags: ignoreversion;
-          Source: "modules/healthModule.R"; DestDir: "{app}\modules"; Flags: ignoreversion;
+Source: "modules/choicesModule.R"; DestDir: "{app}\modules"; Flags: ignoreversion;
+Source: "modules/healthModule.R"; DestDir: "{app}\modules"; Flags: ignoreversion;
+Source: "modules/resourceModule.R"; DestDir: "{app}\modules"; Flags: ignoreversion;
+Source: "modules/spellsModule.R"; DestDir: "{app}\modules"; Flags: ignoreversion;
 Source: "utils/app.R"; DestDir: "{app}\utils"; Flags: ignoreversion;
 Source: "utils/config.cfg"; DestDir: "{app}\utils"; Flags: ignoreversion;
 Source: "utils/ensure.R"; DestDir: "{app}\utils"; Flags: ignoreversion;
@@ -105,7 +113,10 @@ Source: "www/style.css"; DestDir: "{app}\www"; Flags: ignoreversion;
       Filename: "msiexec.exe"; Parameters: "/i ""{tmp}\pandoc-{#PandocVersion}-windows.msi"" /q"; WorkingDir: {tmp}; Check: PandocNeeded; Flags: skipifdoesntexist; StatusMsg: "Installing Pandoc if needed"
   #endif
   #if IncludeChrome
-      Filename: "chrome_installer.exe"; Parameters: "/silent /install"; WorkingDir: {tmp}; Check: ChromeNeeded; Flags: skipifdoesntexist; StatusMsg: "Installing Chrome if needed"
+      Filename: "{tmp}\chrome_installer.exe"; Parameters: "/install"; WorkingDir: {tmp}; Check: ChromeNeeded; Flags: skipifdoesntexist; StatusMsg: "Installing Chrome if needed"
+  #endif
+  #if IncludeRtools
+      Filename: "{tmp}\Rtools{#RtoolsVersion}.exe"; Parameters: "/VERYSILENT"; WorkingDir: {tmp}; Flags: skipifdoesntexist; StatusMsg: "Installing Rtools"
   #endif
   Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
 
@@ -134,23 +145,21 @@ var
     v: Integer;
     success: boolean;
 begin
-    for v := 0 to (RVersions.Count - 1) do
+  success := false;
+  for v := 0 to (RVersions.Count - 1) do
+    begin
+      if RegKeyExists(HKLM, 'Software\R-Core\R\' + RVersions[v]) or RegKeyExists(HKCU, 'Software\R-Core\R\' + RVersions[v]) then
       begin
-        if RegKeyExists(HKLM, 'Software\R-Core\R\' + RVersions[v]) or RegKeyExists(HKCU, 'Software\R-Core\R\' + RVersions[v]) then
-          success := true
-        if success then
-          begin
-            RRegKey := 'Software\R-Core\R\' + RVersions[v];
-            break;
-          end;
+        success := true;
+        RRegKey := 'Software\R-Core\R\' + RVersions[v];
+        break;
       end;
-  begin
-    Result := success;
-  end;
+    end;
+  Result := success;
 end;
 
 // If R is not detected, it is needed
-function RNeeded(): Boolean;
+function RNeeded(): boolean;
 begin
   Result := not RDetected;
 end;
@@ -161,14 +170,14 @@ function ChromeDetected(): boolean;
 var
     success: boolean;
 begin
-  success := RegKeyExists(HKLM, ChromeRegKey);
+  success := RegKeyExists(HKLM, ChromeRegKey) or RegKeyExists(HKCU, ChromeRegKey);
   begin
     Result := success;
   end;
 end;
 
 // If Chrome is not detected, it is needed
-function ChromeNeeded(): Boolean;
+function ChromeNeeded(): boolean;
 begin
   Result := not ChromeDetected;
 end;
@@ -183,7 +192,7 @@ end;
 
 
 // Pandoc is stored in the System PATH
-function PandocDetected(): Boolean;
+function PandocDetected(): boolean;
 var
   PandocDir, Path: String;
 begin
@@ -212,62 +221,83 @@ begin
 end;
 
 // If Pandoc is not detected, it is needed
-function PandocNeeded(): Boolean;
+function PandocNeeded(): boolean;
 begin
   Result := not PandocDetected;
 end;
 
 // Save installation paths
-procedure CurStepChanged(CurStep: TSetupStep);
+procedure SaveInstallationPaths();
 var
   RPath, ChromePath, IEPath, FFPath, PandocPath: string;
 begin
-if CurStep = ssPostInstall then begin
-    RPath := '';
-    ChromePath := '';
-    IEPath := '';
-    FFPath := '';
-    PandocPath := ExpandConstant('{localappdata}\Pandoc\');
-    RegPathsFile := ExpandConstant('{app}\utils\regpaths.json');
+  RPath := '';
+  ChromePath := '';
+  IEPath := '';
+  FFPath := '';
+  PandocPath := ExpandConstant('{localappdata}\Pandoc\');
+  RegPathsFile := ExpandConstant('{app}\utils\regpaths.json');
 
-    if Length(RRegKey) = 0 then
-      RDetected;
+  if Length(RRegKey) = 0 then
+    RDetected;
 
-    // Create registry paths file
-    SaveStringToFile(RegPathsFile, '{' + #13#10, True);
+  // Create registry paths file
+  SaveStringToFile(RegPathsFile, '{' + #13#10, True);
 
-    // R RegPath
-    if RegQueryStringValue(HKLM, RRegKey, 'InstallPath', RPath) or RegQueryStringValue(HKCU, RRegKey, 'InstallPath', RPath) then
-      SaveStringToFile(RegPathsFile, '"r": "' + AddBackSlash(RPath) + '",' + #13#10, True)
-    else
-      SaveStringToFile(RegPathsFile, '"r": "none",' + #13#10, True);
+  // R RegPath
+  if RegQueryStringValue(HKLM, RRegKey, 'InstallPath', RPath) or RegQueryStringValue(HKCU, RRegKey, 'InstallPath', RPath) then
+    SaveStringToFile(RegPathsFile, '"r": "' + AddBackSlash(RPath) + '",' + #13#10, True)
+  else
+    SaveStringToFile(RegPathsFile, '"r": "none",' + #13#10, True);
 
-    // Chrome RegPath
-    if RegQueryStringValue(HKLM, ChromeRegKey, 'Path', ChromePath) then
-      SaveStringToFile(RegPathsFile, '"chrome": "' + AddBackSlash(ChromePath) + '",' + #13#10, True)
-    else
-      SaveStringToFile(RegPathsFile, '"chrome": "none",' + #13#10, True);
+  // Chrome RegPath
+  if RegQueryStringValue(HKLM, ChromeRegKey, 'Path', ChromePath) or RegQueryStringValue(HKCU, ChromeRegKey, 'Path', ChromePath) then
+    SaveStringToFile(RegPathsFile, '"chrome": "' + AddBackSlash(ChromePath) + '",' + #13#10, True)
+  else
+    SaveStringToFile(RegPathsFile, '"chrome": "none",' + #13#10, True);
 
-    // Internet Explorer RegPath
-    if RegQueryStringValue(HKLM, IERegKey, '', IEPath) then
-      SaveStringToFile(RegPathsFile, '"ie": "' + AddBackSlash(IEPath) + '",' + #13#10, True)
-    else
-      SaveStringToFile(RegPathsFile, '"ie": "none",' + #13#10, True);
+  // Internet Explorer RegPath
+  if RegQueryStringValue(HKLM, IERegKey, '', IEPath) then
+    SaveStringToFile(RegPathsFile, '"ie": "' + AddBackSlash(IEPath) + '",' + #13#10, True)
+  else
+    SaveStringToFile(RegPathsFile, '"ie": "none",' + #13#10, True);
 
-    // Firefox RegPath
-    if RegQueryStringValue(HKLM, FFRegKey, 'Path', FFPath) then
-      SaveStringToFile(RegPathsFile, '"ff": "' + AddBackSlash(FFPath) + '",' + #13#10, True)
-    else
-      SaveStringToFile(RegPathsFile, '"ff": "none",' + #13#10, True);
+  // Firefox RegPath
+  if RegQueryStringValue(HKLM, FFRegKey, 'Path', FFPath) then
+    SaveStringToFile(RegPathsFile, '"ff": "' + AddBackSlash(FFPath) + '",' + #13#10, True)
+  else
+    SaveStringToFile(RegPathsFile, '"ff": "none",' + #13#10, True);
 
-    // Pandoc RegPath
-    // ** Last Line in json file (no trailing comma) **
-    if PandocDetected() then
-      SaveStringToFile(RegPathsFile, '"pandoc": "' + AddBackSlash(PandocPath) + '"' + #13#10, True)
-    else
-      SaveStringToFile(RegPathsFile, '"pandoc": "none"' + #13#10, True);
+  // Pandoc RegPath
+  // ** Last Line in json file (no trailing comma) **
+  if PandocDetected() then
+    SaveStringToFile(RegPathsFile, '"pandoc": "' + AddBackSlash(PandocPath) + '"' + #13#10, True)
+  else
+    SaveStringToFile(RegPathsFile, '"pandoc": "none"' + #13#10, True);
 
-    SaveStringToFile(RegPathsFile, '}', True);
+  SaveStringToFile(RegPathsFile, '}', True);
+end;
+
+// Pre- and post-installation actions
+procedure CurStepChanged(CurStep: TSetupStep);
+begin
+  // Pre-installation actions
+  if CurStep = ssInstall then
+  begin
+  #if IncludeR
+  #else
+    // With `CurStep = ssInstall` we can still `Abort` if R not included but needed
+    if RNeeded then
+    begin
+      SuppressibleMsgBox(Format('Error: R >= %s not found',[RVersions[RVersions.Count - 1]]), mbError, MB_OK, MB_OK);
+      Abort;
+    end;
+  #endif
+  end;
+  // Post-installation actions
+  if CurStep = ssPostInstall then
+  begin
+    SaveInstallationPaths;
   end;
 end;
 

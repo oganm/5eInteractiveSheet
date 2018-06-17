@@ -1,1 +1,0 @@
-This will install the interactive character sheet for Walter Kammerer's fifth edition character sheet.

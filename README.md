@@ -12,13 +12,13 @@ Installation
 
 ### Windows
 
-Download and install either [this](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe) file (static version) or [this](https://github.com/oganm/5eInteractiveSheet/raw/master/sheetCI/RInno_installer/setup_import5eChar.exe) one (automatically gets the latest version)
+Download and install [this](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe) file.
 
 After that you should be golden.
 
 Double click the desktop icon to run. See usage instructions [here](https://github.com/oganm/import5eChar/blob/master/interactiveSheetDocumentation.md)
 
-You'll only be missing one minor feature: The ability to get your files directly from googledrive without downloading them first. Alas I failed to port this to the installer. If you really want this you can install it through the sligtly more difficult way explained below.
+You'll only be missing one minor feature: The ability to get your files directly from googledrive without downloading them first. If you really want this you can install it through the sligtly more difficult way explained below.
 
 ### Linux/mac, Ambitious windows user
 
@@ -63,9 +63,7 @@ to run. Note that this'll shut down your R session after closing the window. If 
 Updating
 --------
 
-If you are on windows and used the static installer, uninstall your previous version, download exe and install.
-
-If you have used the auto updating version, don't do anything.
+If you used the installer uninstall your previous version, download exe and install.
 
 Other's just run
 
