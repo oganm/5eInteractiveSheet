@@ -10,6 +10,8 @@ Online version can be found [here](https://oganm.github.io/5eInteractiveSheet/).
 Installation
 ------------
 
+I haven't been updating this repository for some time now and people who use the windows installer have been reporting issues. Follow the Linux instructions to get the latest version of the application or use the online version.
+
 ### Windows
 
 Download and install [this](https://github.com/oganm/5eInteractiveSheet/raw/master/sheet/RInno_installer/setup_5eInteractiveSheet.exe) file.
