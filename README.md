@@ -10,7 +10,7 @@ Online version can be found [here](https://oganm.github.io/5eInteractiveSheet/).
 Installation
 ------------
 
-I haven't been updating this repository for some time now and people who use the windows installer have been reporting issues. Follow the Linux instructions to get the latest version of the application or use the online version.
+I haven't been updating this repository for some time now and people who use the windows installer have been reporting issues. Follow the Linux/Mac instructions to get the latest version of the application or use the online version. If you want to see the latest source code, see [here](https://github.com/oganm/import5eChar/tree/master/inst/app).
 
 ### Windows
 
